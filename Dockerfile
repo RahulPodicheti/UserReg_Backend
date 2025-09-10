@@ -1,5 +1,5 @@
 # Use a stable OpenJDK image
-FROM openjdk:20-jdk-slim
+FROM openjdk:20-jdk-slim AS build
 
 # Set working directory
 WORKDIR /app
@@ -15,11 +15,14 @@ RUN chmod +x mvnw
 # Build the project and skip tests
 RUN ./mvnw clean package -DskipTests
 
-# Copy the generated JAR
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+# Create a new image to run the app
+FROM openjdk:20-jdk-slim
+WORKDIR /app
 
-# Expose port (Render will provide PORT environment variable)
+# Copy the built JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port (Render provides PORT environment variable)
 EXPOSE 8080
 
 # Use Render's dynamic PORT
