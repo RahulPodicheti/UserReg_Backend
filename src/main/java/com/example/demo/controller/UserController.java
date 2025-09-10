@@ -14,7 +14,7 @@ import com.example.demo.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5173") // your React Vite port
+@CrossOrigin(origins = "https://userreg-frontend.onrender.com") // your React Vite port
 public class UserController {
 
     @Autowired
